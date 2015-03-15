@@ -5,7 +5,7 @@ from scipy import linalg as LA
 #from sklearn.decomposition import PCA
 import pickle
 
-def show_image(data, num):
+def show_image(data, num):           # examine the key point from the orginal 96 X 96 image 
 	lefteye = int(data.loc[num, 'left_eye_center_x']),int(data.loc[num, 'left_eye_center_y']) 
 	righteye = int(data.loc[num, 'right_eye_center_x']),int(data.loc[num, 'right_eye_center_y'])
 	image = np.fromstring(data['Image'][num], dtype = np.uint8, sep = ' ').reshape((96,96))
@@ -17,7 +17,7 @@ def show_image(data, num):
 	cv2.imshow('Image', image)
 	cv2.waitKey()
 
-def show_image2(data, matrix, num):
+def show_image2(data, matrix, num):    # examine the key point form the PCA-derived images reduced to 48 X 48 images
 	lefteye = int(data.loc[num, 'left_eye_center_x']),int(data.loc[num, 'left_eye_center_y']) 
 	righteye = int(data.loc[num, 'right_eye_center_x']),int(data.loc[num, 'right_eye_center_y'])
 	image = np.array(matrix[num,], dtype = np.uint8).reshape((96, 96))
@@ -61,67 +61,27 @@ def pcaCal(data, percentage = 0.8):
 
 
 
-'''
-np.random.seed(seed = 42)
-data = pd.read_csv('training.csv', header = 0)
-train_idx = np.random.choice(data.shape[0], size = 5640, replace = False)
-test_idx = [x for x in range(data.shape[0]) if x not in train_idx]
-train_data, test_data = data.loc[train_idx], data.loc[test_idx]
-#train_data.to_csv('train.csv', index = False)
-#test_data.to_csv('test.csv', index = False)
-'''
-#data = pd.read_csv('training_nona.csv', header = 0)
+##  code below is used to calculate covariance matrix, eigenvalues and eigenvectors 
+data = pd.read_csv('training_nona.csv', header = 0)
 
-'''
-train_data, test_data = pd.read_csv('train.csv', header = 0), pd.read_csv('test.csv', header = 0) 
-train_data = pd.DataFrame(train_data, columns = ['left_eye_center_x', 'left_eye_center_y', 'right_eye_center_x', 'right_eye_center_y', 'nose_tip_x', 'nose_tip_y', 'Image']).dropna()
-test_data = pd.DataFrame(test_data, columns = ['left_eye_center_x', 'left_eye_center_y', 'right_eye_center_x', 'right_eye_center_y', 'nose_tip_x', 'nose_tip_y', 'Image']).dropna()
-train_data.to_csv('train2.csv', index = False)
-test_data.to_csv('test2.csv', index = False)
-'''
-'''
-train_matrix, test_matrix = ' '.join([x for x in np.array(train_data['Image'])]), ' '.join([x for x in np.array(test_data['Image'])])
-train_matrix, test_matrix = np.fromstring(train_matrix, dtype = np.uint8, sep = ' '), np.fromstring(test_matrix, dtype = np.uint8, sep = ' ')
-train_matrix, test_matrix = train_matrix.reshape((5626, 9216)), test_matrix.reshape((1407, 9216))
-'''
-'''
+
+
 train_matrix = ' '.join([x for x in np.array(data['Image'])])
 train_matrix = np.fromstring(train_matrix, dtype = np.uint8, sep = ' ')
 train_matrix = train_matrix.reshape((2140, 9216))
 train, avg1 = offset(train_matrix)
 result1 = np.cov(train, rowvar = 0)
 pickle.dump(result1, open('train_covariance_nona', 'wb'))
-'''
-'''
-test, avg2 = offset(test_matrix)
-result2 = np.cov(test, rowvar = 0)
-pickle.dump(result2, open('test_covariance', 'wb'))
-'''
-'''
-#matrix = ' '.join([x for x in np.array(data['Image'])])       # combine each one string to one big string for the value of target variable data['Image']
-#matrix = np.fromstring(matrix, dtype = np.uint8, sep = ' ')   # read the string and to form a matrix
 
 
-
-matrix = matrix.reshape((7049, 9216))                         # reshape the matrix to 7049 rows and 9216 cols
-newData, avg = offset(matrix)                                 # preprocessing for covariance calculation --- normalization ( remove mean )
-
-
-
-#newFeature, reconFeature = pcaCal(matrix)
-newData, avg = offset(matrix)
-result = np.cov(newData, rowvar = 0)
-pickle.dump(result, open('covariance', 'wb'))
-'''
-'''
 covariance = pickle.load(open('train_covariance_nona', 'r'))
 eigenValue, eigenVector = LA.eigh(np.mat(covariance), eigvals = (6912,9215)) # eigvals parameter will only return the several maximum eigenvalues with
 pickle.dump(eigenValue, open('eigenValue48by48_train_nona', 'wb'))                      # corrsponding eigenvectors
 pickle.dump(eigenVector, open('eigenVector48by48_train_nona', 'wb'))
-'''
 
 
 
+# code below is used to calculate the reconstructed image from PCA-derived features 
 data = pd.read_csv('training_nona.csv', header = 0)
 
 matrix = ' '.join([x for x in np.array(data['Image'])])
