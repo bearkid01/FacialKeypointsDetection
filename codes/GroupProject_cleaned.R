@@ -75,7 +75,8 @@ stime <- system.time({
 
 stime
 
-
+# borrowed this function from http://stackoverflow.com/questions/10865489/scaling-an-r-image
+"
 resizePixels = function(im, w, h) {
   pixels = as.vector(im)
   # initial width/height
@@ -101,6 +102,7 @@ resizePixels = function(im, w, h) {
   m = matrix(temp, h2, w2)
   return(m)
 }
+"
 
 image(1:48,1:48,resizePixels(im,48,48),col=gray((0:255)/255))
 image(1:96,1:96,resizePixels(im,96,96),col=gray((0:255)/255))
