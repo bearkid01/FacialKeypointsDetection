@@ -5,4 +5,4 @@ The purpose of this project is to apply advanced machine learning techniques to 
 
 Without using any technique from computer vision, we proved that a single hidden layer neural network could easily approximate the underlying function. Also, our decision to choose neural networks at the first place is sound. Both models fit the characteristics of the datasets, taking a high-dimensional input and outputting a numeric vector. Compared with the single layer neural network, our advanced solution, the convolutional neural network reached an even lower RMSE on the test dataset without being cross-validated. Again, the results from Kaggle demonstrate the strong capability of the convolutional neural network in image recognition. 
 
-![Images With Facial Keypoints Marked](www.github.com/bearkid01/FacialKeypointsDetection/graphs/3by3.png)
+![Images With Facial Keypoints Marked](https://github.com/bearkid01/FacialKeypointsDetection/blob/master/graphs/3by3.png)
