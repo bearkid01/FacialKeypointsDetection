@@ -7,4 +7,3 @@ Without using any technique from computer vision, we proved that a single hidden
 
 Here are nine images selected from the test dataset marked with facial keypoints which were outputted by our CNN model. 
 
-![Images With Facial Keypoints Marked](https://github.com/bearkid01/FacialKeypointsDetection/blob/master/graphs/3by3.png)
